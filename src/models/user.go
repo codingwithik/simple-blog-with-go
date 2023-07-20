@@ -9,7 +9,7 @@ type User struct {
 	Name     string `gorm:"type:varchar(255);not null"`
 	Email    string `gorm:"uniqueIndex;not null"`
 	Password string `json:"password"`
-	Post     []Post
+	Posts    []Post `gorm:"foreignKey:UserID"`
 }
 
 func (user *User) HashPassword(password string) error {
