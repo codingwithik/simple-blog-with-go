@@ -44,6 +44,16 @@ func (ctl *authController) RegisterRoutes(router *gin.Engine) {
 
 }
 
+// @BasePath /api/v1
+
+// @Summary Route example
+// @Schemes
+// @Description do ping
+// @Tags exmaple
+// @Accept json
+// @Produce json
+// @Sucess 200 {string} Route
+// @Router /route [POST]
 func (ctl *authController) Login(ctx *gin.Context) {
 
 	var body dtos.LoginRequest

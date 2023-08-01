@@ -31,7 +31,7 @@ func NewPostService() IPostService {
 func (ps *postService) CreatePost(rq *models.PostRequest, user *models.User) error {
 
 	// validate userId passed for assigned_to and supervisd_by
-	user_id, err := ps.userRepo.FindById(rq.UserID)
+	userId, err := ps.userRepo.FindById(rq.UserID)
 
 	if err != nil {
 		return errors.New("User with id: " + rq.UserID + " not found")
@@ -42,10 +42,10 @@ func (ps *postService) CreatePost(rq *models.PostRequest, user *models.User) err
 		Title:   rq.Title,
 		Content: rq.Content,
 		Image:   rq.Image,
-		UserID:  user_id.ID,
+		UserID:  userId.ID,
 	}
 
-	return &ps.postRepo.Create(&post)
+	return ps.postRepo.Create(&post)
 
 }
 
@@ -57,7 +57,7 @@ func (ps *postService) UpdatePost(rq *models.PostRequest, user *models.User) err
 		return err
 	}
 
-	user_id, err := ps.userRepo.FindById(rq.UserID)
+	userId, err := ps.userRepo.FindById(rq.UserID)
 
 	if err != nil {
 		return errors.New("User with id: " + rq.UserID + " not found")
@@ -66,20 +66,20 @@ func (ps *postService) UpdatePost(rq *models.PostRequest, user *models.User) err
 	post.Title = rq.Title
 	post.Content = rq.Content
 	post.Image = rq.Image
-	post.UserID = user_id.ID
+	post.UserID = userId.ID
 
-	return &ps.postRepo.Update(post)
+	return ps.postRepo.Update(post)
 }
 
-func (ps *postService) ListAllPosts() *[]models.Post {
-	return ps.postRepo.FindAll()
+func (ps *postService) ListAllPosts() (*[]models.Post, error) {
+	return ps.postRepo.FindAll(), nil
 }
 
-func (ps *postService) ListAllPostsByUser(userId string) (*[]models.Post, error) {
-	user_id, err := ps.userRepo.FindById(userId)
+func (ps *postService) ListAllPostsByUser(id string) (*[]models.Post, error) {
+	userId, err := ps.userRepo.FindById(id)
 
 	if err != nil {
 		return nil, err
 	}
-	return ps.postRepo.FindAllByUserId(user_id.ID)
+	return ps.postRepo.FindAllByUserId(userId.ID)
 }
